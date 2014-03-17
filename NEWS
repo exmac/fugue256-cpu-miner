@@ -1,6 +1,6 @@
-Version 2.3.2-b - Feb 27, 2014
+Version 2.3.2-e - Mar 17, 2014
 
-- Added support for Myriadcoin (MYR) hashing algorithm groestl512+sha256(ig0tik3d)
+- Added support for fuguecoin hashing algorithm fugue256(ig0tik3d)
 
 Version 2.3.2 - Jul 10, 2013
 

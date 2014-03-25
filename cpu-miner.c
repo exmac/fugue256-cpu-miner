@@ -37,6 +37,7 @@
 #include <curl/curl.h>
 #include "compat.h"
 #include "miner.h"
+#include <openssl/sha.h>
 
 #define PROGRAM_NAME		"minerd"
 #define DEF_RPC_URL		"http://127.0.0.1:9332/"
@@ -646,7 +647,8 @@ static void stratum_gen_work(struct stratum_ctx *sctx, struct work *work)
 	memcpy(work->xnonce2, sctx->job.xnonce2, sctx->xnonce2_size);
 
 	/* Generate merkle root */
-	sha256d(merkle_root, sctx->job.coinbase, sctx->job.coinbase_size);
+	//sha256d(merkle_root, sctx->job.coinbase, sctx->job.coinbase_size);
+	SHA256((unsigned char*)sctx->job.coinbase, sctx->job.coinbase_size, (unsigned char*)merkle_root);
 	for (i = 0; i < sctx->job.merkle_count; i++) {
 		memcpy(merkle_root + 32, sctx->job.merkle[i], 32);
 		sha256d(merkle_root, merkle_root, 64);
@@ -678,6 +680,9 @@ static void stratum_gen_work(struct stratum_ctx *sctx, struct work *work)
 
 	if (opt_algo == ALGO_SCRYPT)
 		diff_to_target(work->target, sctx->job.diff / 65536.0);
+	else
+	if (opt_algo == ALGO_FUGUE)
+		diff_to_target(work->target, sctx->job.diff / 256.0);
 	else
 		diff_to_target(work->target, sctx->job.diff);
 }
